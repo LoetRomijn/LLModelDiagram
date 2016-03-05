@@ -1,0 +1,24 @@
+{
+  "name": "llmodeldiagram",
+  "version": "0.0.1",
+  "description": "LLModelDiagram homework NYCDA/BSSA",
+  "main": "index.js",
+  "dependencies": {
+    "jade": "^1.11.0",
+    "pg": "^4.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoetRomijn/LLModelDiagram.git"
+  },
+  "author": "Loet Romijn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LoetRomijn/LLModelDiagram/issues"
+  },
+  "homepage": "https://github.com/LoetRomijn/LLModelDiagram#readme"
+}
