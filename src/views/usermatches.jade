@@ -1,0 +1,33 @@
+doctype html
+html(lang="en")
+	head
+		link(rel='stylesheet', href='/styles.css', type ='text/css')
+	body
+		div.bodydiv
+		div.bodyTextdiv
+			h1 Language Learning Model Diagram
+			br
+			h3 #{user.name}
+			a(href='/logout') Logout
+			br
+			br
+			p If you read this message, it means that this page is still under construction.
+			p I created a database called 'llmodeldiagram' which has three tables: 
+			p users (id SERIAL PRIMARY KEY, name TEXT, password TEXT), 
+			p languages (id SERIAL PRIMARY KEY, language TEXT)
+			p Those two tables are joined 
+			br
+			p Users.belongsToMany(Languages, {through: UserLanguages});
+			p Languages.belongsToMany(Users, {through: UserLanguages});
+			br
+			p in the third table:
+			p user_languages(userId INTEGER, languageId INTEGER, fluentorlearn TEXT)
+			br
+			p At the moment I added some languages manually into the languages column, because I
+			p haven't found out yet how to insert a JSON file into the postgres database.
+			br
+			p 
+			p Two queries will be written to 1) find the users that are fluent in a language
+			p the user who is logged in wants to learn and 2) will find the users that want to
+			p learn the language(s) the current user is fluent in. 
+			p When logging in, the user will see a list with matches that updates every time you log in. 

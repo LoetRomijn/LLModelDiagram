@@ -1,6 +1,6 @@
 /*/////////////////////////////////////////////////
 
- Language Learn Model Diagram NYCDA homework 
+ Language Learning Model Diagram NYCDA homework 
 
 /////////////////////////////////////////////////*/
 
@@ -9,8 +9,10 @@ var bodyParser = require('body-parser');
 var sequelize = require('sequelize');
 var session = require('express-session');
 var bcrypt = require('bcrypt');
+var fs = require('fs')
 
 var app = express();
+
 
 app.use(express.static(__dirname + '/public'));
 
@@ -27,10 +29,11 @@ app.use(session({
 app.set('views', './src/views');
 app.set('view engine', 'jade');
 
+
 // Sequelize settings
 
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('blogapp', process.env.POSTGRES_USER, null, {
+var sequelize = new Sequelize('llmodeldiagram', process.env.POSTGRES_USER, null, {
 	host: 'localhost',
 	dialect: 'postgres',
 	define: {
@@ -49,7 +52,7 @@ var Users = sequelize.define('users', {
 	password: Sequelize.TEXT
 });
 
-var Language = sequelize.define('languages', {
+var Languages = sequelize.define('languages', {
 	language: Sequelize.TEXT
 });
 
@@ -57,12 +60,12 @@ var UserLanguages = sequelize.define('user_languages', {
 	fluentorlearn: Sequelize.TEXT
 });
 
-Users.hasMany(UserLanguages);
-UserLanguages.belongsTo(Users);
-
-Languages.hasMany(UserLanguages);
-UserLanguages.belongsTo(Languages);
-
+Users.belongsToMany(Languages, {
+	through: UserLanguages
+});
+Languages.belongsToMany(Users, {
+	through: UserLanguages
+});
 
 //Routes 
 
@@ -86,11 +89,22 @@ app.get('/logout', function(request, response) {
 	});
 });
 
+// User matches
+
+app.get('/user/matches', function(request, response) {
+	var user = request.session.user;
+	response.render('usermatches', {
+		user: user
+	})
+})
+
 // Login   
 
 app.post('/login', function(request, response) {
 	var password = request.body.password;
-	User.findOne({
+	var name = request.body.name;
+
+	Users.findOne({
 		where: {
 			name: request.body.name
 		}
@@ -101,7 +115,7 @@ app.post('/login', function(request, response) {
 			if (user === null) {
 				response.redirect('/?message=' + encodeURIComponent("Please register below before logging in"));
 
-			} else if (request.body.name.length === 0) {
+			} else if (name.length === 0) {
 				response.redirect('/?message=' + encodeURIComponent("Please enter a name"));
 			} else if (password.length === 0) {
 				response.redirect('/?message=' + encodeURIComponent("Please enter a password"));
@@ -112,7 +126,7 @@ app.post('/login', function(request, response) {
 					}
 					if (passwordMatch) {
 						request.session.user = user;
-						response.redirect('/user/page');
+						response.redirect('/user/matches');
 					} else {
 						response.redirect('/?message=' + encodeURIComponent("Name or Password incorrect, try again!"))
 					}
@@ -129,32 +143,79 @@ app.post('/login', function(request, response) {
 
 app.post('/user/new', function(request, response) {
 	var user = request.session.user;
+	var name = request.body.name;
+	var email = request.body.email;
+	var password = request.body.password;
+
+
 
 	bcrypt.hash(request.body.password, 8, function(err, passwordHash) {
 		if (err !== undefined) {
 			console.log(err);
 		}
-		if (request.body.name.length === 0 || request.body.email.length === 0 || request.body.password.length === 0) {
-			response.redirect('/?message=' + encodeURIComponent("Please enter a name, emailaddress and a password"));
+		if (name.length === 0 || password.length === 0) {
+			response.redirect('/?message=' + encodeURIComponent("Please enter a name and a password"));
 		} else {
-			User.create({
-				name: request.body.name,
-				password: passwordHash,
-				
-			}).then(function(user) {
-					response.redirect('/user/page');
-				},
-				function(error) {
-					response.redirect('/?message=' + encodeURIComponent("Name or email already in use, try something else!"));
-				});
-		};
-	});
+			function getRadioCheckedValue(Dutch) {
+				var oRadio = document.forms[0].elements[Dutch];
+
+				for (var i = 0; i < oRadio.length; i++) {
+					if (oRadio[i].checked) {
+						return oRadio[i].value;
+					}
+				}
+
+				var ForL = oRadio[i].value;
+			}
+			if (ForL !== null) {
+				Users.create({
+					name: request.body.name,
+					password: passwordHash
+				})
+				UserLanguages.create({
+					fluentorlearn: ForL
+				})
+				request.session.user = user;
+			}
+		}
+	}).then(function(user) {
+			response.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
+		},
+		function(error) {
+			response.redirect('/?message=' + encodeURIComponent("Name or email already in use, try something else!"));
+		});
 });
+
 
 // Sync database, then start server 
 
-sequelize.sync({force:true}).then(function() {
-	var server = app.listen(3000, function() {
-		console.log('Language Learn Model Diagram running on port 3000');
+sequelize.sync().then(function() {
+	// fs.readFile('../public/languages.json', function(err, data) {
+	// 	if (err) {
+	// 		throw err;
+	// 	};
+	// 	info = JSON.parse(data);
+	// 	for (i = 0; i < info.length; i++)
+	// 		Languages.create({
+	// 			language: languages[i].name
+	// 		})
+
+	// });
+/////////////////////////////////////////////////////////////////////////////
+	// var languagesReader = require('./languagesJSONreader.js')
+
+	// languagesReader.languages('../public/languages.json', function(info) {
+	// 	if (error) {
+	// 		throw err;
+	// 		console.log("error")
+	// 	} else {
+	// 		for (i = 0; i < languages.length; i++)
+	// 			Languages.create({
+	// 				language: languages[i].name
+	// 			})
+	// 	}
+	// })
+	app.listen(3000, function() {
+		console.log('Language Learning Model Diagram running on port 3000');
 	});
 });

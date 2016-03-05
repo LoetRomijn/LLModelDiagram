@@ -1,40 +1,62 @@
 doctype html
 html(lang="en")
 	head
-		link(rel='stylesheet', href='/style.css', type ='text/css')
+		link(rel='stylesheet', href='/styles.css', type ='text/css')
 	body
 		div.bodydiv
 		div.bodyTextdiv
-			a(href='/user/page') User page
-			h1 Awesome Blog
+			h1 Language Learning Model Diagram
 			br 
 			br 
-			p Login or register and share your thoughts...
+			p Login or register and see who's your match!
 			br
 			h2= message
-			br
-			h3 Login
-			br
-			form(class='form' name='post' action='/login' method='post')
-				label Name
-				input(type='text' name='name' placeholder='Name' autocomplete='off')
-				label Password
-				input(type='password' name ='password' placeholder='Password' autocomplete='off')
-				input(type='submit' value='Login') 
-			br 
-			h3 Register
-			br
-			form(class= 'form' name= 'post' action='/user/new' method='post')
-				label Name
-				input(type='text' name='name' placeholder='Name' autocomplete='off')
-				label Password
-				input(type='password' name ='password' placeholder='Password' autocomplete='off')
-				label Languages you are fluent in
-				input(type='text' name ='fluentlanguages' placeholder='Language' autocomplete='off')
-				label Languages you would like to learn
-				input(type='text' name ='learnlanguages' placeholder='Language' autocomplete='off')
-				input(type='submit' value='Register') 
+			div#columnleft
+				h3 Login
 				br
+				form(class='form' name='post' action='/login' method='post')
+					label Name
+					input(type='text' name='name' placeholder='Name' autocomplete='off')
+					label Password
+					input(type='password' name ='password' placeholder='Password' autocomplete='off')
+					input(type='submit' value='Login') 
+			div#columnright
+				h3 Register
+				br
+				div#languages
+					form(class= 'form' name= 'post' action='/user/new' method='post')
+						label Name
+						input(type='text' name='name' placeholder='Name' autocomplete='off')
+						label Password
+						input(type='password' name ='password' placeholder='Password' autocomplete='off')
+						br
+						label Fluent in Dutch
+						input(type='radio' name ='Dutch' value = "fluent")
+						label Learn Dutch
+						input(type='radio' name ='Dutch' value = "learn")
+						br
+						label Fluent in German
+						input(type='radio' name ='German' value = "fluent")
+						label Learn German
+						input(type='radio' name ='German' value = "learn")
+						br
+						label Fluent in English
+						input(type='radio' name ='English' value = "fluent")
+						label Learn English
+						input(type='radio' name ='English' value = "learn")
+						br
+						label Fluent in French
+						input(type='radio' name ='French' value = "fluent")
+						label Learn French
+						input(type='radio' name ='French' value = "learn")
+						br
+						label Fluent in Italian
+						input(type='radio' name ='Italian' value = "fluent")
+						label Learn Italian
+						input(type='radio' name ='Italian' value = "learn")
+						br
+						input(type='submit' value='Register') 
+						br
 
 
 
