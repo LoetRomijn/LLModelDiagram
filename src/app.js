@@ -147,43 +147,58 @@ app.post('/user/new', function(request, response) {
 	var email = request.body.email;
 	var password = request.body.password;
 
+	// function getRadioCheckedValue(radio) {
+	// 			var oRadio = document.forms[0].elements[radio];
+
+	// 			for (var i = 0; i < oRadio.length; i++) {
+	// 				if (oRadio[i].checked) {
+	// 					return oRadio[i].value;
+	// 				}
+	// 			}
+
+	// 			var ForL = oRadio[i].value;
+	// 		}
+	// 		DutchCheckbox = form.elements["Dutch"]
+	// 		getRadioCheckedValue(DutchCheckbox);
+
+
+	// var checkedValue = null; 
+	// var inputElements = document.getElementsByClassName('form');
+	// for(var i=0; inputElements[i]; i++){
+	//       if(inputElements[i].checked){
+	//            checkedValue = inputElements[i].value;
+	//            break;
+	//       }
+	// }
+
 
 
 	bcrypt.hash(request.body.password, 8, function(err, passwordHash) {
+
 		if (err !== undefined) {
 			console.log(err);
 		}
 		if (name.length === 0 || password.length === 0) {
 			response.redirect('/?message=' + encodeURIComponent("Please enter a name and a password"));
 		} else {
-			function getRadioCheckedValue(Dutch) {
-				var oRadio = document.forms[0].elements[Dutch];
 
-				for (var i = 0; i < oRadio.length; i++) {
-					if (oRadio[i].checked) {
-						return oRadio[i].value;
-					}
-				}
+			Users.create({
+				name: request.body.name,
+				password: passwordHash
 
-				var ForL = oRadio[i].value;
-			}
-			if (ForL !== null) {
-				Users.create({
-					name: request.body.name,
-					password: passwordHash
-				})
-				UserLanguages.create({
-					fluentorlearn: ForL
-				})
-				request.session.user = user;
-			}
-		}
-	}).then(function(user) {
-			response.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
-		},
-		function(error) {
-			response.redirect('/?message=' + encodeURIComponent("Name or email already in use, try something else!"));
-		});
+				// UserLanguages.create({
+				// 	userId: request.session.user,
+				// 	languageId: 
+				// 	fluentorlearn: ForL
+				// })
+			}).then(function(user) {
+					response.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
+				},
+				function(error) {
+					response.redirect('/?message=' + encodeURIComponent("Name or email already in use, try something else!"));
+				});
+		};
+	});
 });
 
 
@@ -201,7 +216,7 @@ sequelize.sync().then(function() {
 	// 		})
 
 	// });
-/////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 	// var languagesReader = require('./languagesJSONreader.js')
 
 	// languagesReader.languages('../public/languages.json', function(info) {

@@ -28,6 +28,37 @@ html(lang="en")
 			br
 			p 
 			p Two queries will be written to 1) find the users that are fluent in a language
-			p the user who is logged in wants to learn and 2) will find the users that want to
-			p learn the language(s) the current user is fluent in. 
-			p When logging in, the user will see a list with matches that updates every time you log in. 
+			p the user who is logged in wants to learn [Find a user with current session.user.id, 
+			p find languages with current sessions user.id and language.id with value 'learn', find 
+			p all users in user_languages with identical language.id with value 'fluent']
+			p and 2) will find the users that want to learn the language(s) the current user is fluent in. 
+			p [ AND find languages with current 
+			p sessions user.id and value 'fluent', find all users in user_languages with identical 
+			p language.id and value 'learn'] [get names of users via table users where id = userId in 
+			p table user_languages and names of languages via table languages where id = languageId in 
+			p table user_languages]
+
+
+
+
+
+//- 			select u.id, u.naam, ulf.language_iso_code f, ull.language_iso_code l
+//- from  users u,
+//-       user_languages ulf, (userlanguagesfluency)
+//-       user_languages ull (userlanguageslearn)
+//- where u.id = ulf.user_id
+//- and   u.id = ull.user_id
+//- and   ulf.fluent_or_learn = 'F'
+//- and   ull.fluent_or_learn = 'L'
+//- and   (ull.language_iso_code, ulf.language_iso_code) in 
+//-       (select ulf1.language_iso_code, ull1.language_iso_code 
+//-        from users u1,
+//-            user_languages ulf1,
+//-            user_languages ull1
+//-        where u1.id = ulf1.user_id
+//-        and   u1.id = ull1.user_id
+//-        and   ulf1.fluent_or_learn = 'F'
+//-        and   ull1.fluent_or_learn = 'L'
+//-        and   u1.id = 1)
+//- 			br
+//- 			p When logging in, the user will see a list with matches that updates every time you log in. 
